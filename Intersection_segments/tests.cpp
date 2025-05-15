@@ -213,6 +213,8 @@ void test_point_on_extended_segment() {
 
 int main()
 {
+    setlocale(LC_ALL, "Russian");
+
     test_parallel_non_intersecting();
     test_collinear_intersecting();
     test_collinear_non_intersecting();
