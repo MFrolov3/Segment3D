@@ -1,8 +1,7 @@
 #include <cmath>
 #include "vector3D.h"
-//реализация методов класса Vector3D, методов класса Segment3D включая функцию Intersect
 
-
+//implementation of methods of the vector class
 double Vector3D::get_x() const { return X; }
 double Vector3D::get_y() const { return Y; }
 double Vector3D::get_z() const { return Z; }

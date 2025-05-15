@@ -3,8 +3,8 @@
 #include "segment3D.h"
 
 
-//тесты для проверки работы метода/функции Intersect()
-bool is_nan_vector(const Vector3D& v) { //вспомогательная функция для тестирования
+//tests to verify the operation of the Intersect() method/function
+bool is_nan_vector(const Vector3D& v) { //auxiliary function for testing
     return std::isnan(v.get_x()) && std::isnan(v.get_y()) && std::isnan(v.get_z());
 }
 
@@ -213,8 +213,6 @@ void test_point_on_extended_segment() {
 
 int main()
 {
-    setlocale(LC_ALL, "Russian");
-
     test_parallel_non_intersecting();
     test_collinear_intersecting();
     test_collinear_non_intersecting();

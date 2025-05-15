@@ -25,16 +25,15 @@ bool Segment3D::both_sectors_are_points(const Segment3D& segment) const
         (segment.get_end() - segment.get_start()).is_zero();
 }
 
-//задаем уравнения двух отрезков
-//r1+t*dir1, где t скаляр меняется от 0 до 1, 
-//r1 вектор от начала отсчёта до начала отрезка, 
-//dir1 направление отрезка (вектора от его начала до его конца)
-//по аналогии для второго отрезка r2 + s * dir2
-//из r1+t*dir1 = r2+s*dir2 => (r2-r1).cross_product(dir2) = t*(dir1).cross_product(dir2) (*)
-//из уравнения (*) можно найти t, и поставить условие 0=<t<=1, найдя t можем вычислить
-//точку пересечения. Для решения уравнения нужно убедиться что векторы сонаправлены, 
-//знаменатель не равен нулю и только тогда вычислить параметр t
-
+//we set the equations of two segments
+//r1+t*dir1, where t is a scalar varying from 0 to 1,
+//r1 is a vector from the origin to the beginning of the segment,
+//dir1 is the direction of the segment (vector from its beginning to its end)
+//by analogy for the second segment r2 + s * dir2
+//from r1+t*dir1 = r2+s*dir2 => (r2-r1).cross_product(dir2) = t*(dir1).cross_product(dir2) (*)
+//from equation(*), we can find t, and set the condition 0=<t<=1 having found t, we can calculate
+//the intersection point. To solve the equation, you need to make sure that the vectors are aligned,
+// the denominator is not zero, and only then calculate the parameter t
 Vector3D Segment3D::Intersect(const Segment3D& segment) const
 {
     
@@ -43,21 +42,21 @@ Vector3D Segment3D::Intersect(const Segment3D& segment) const
     Vector3D r1 = get_start();
     Vector3D r2 = segment.get_start();
 
-    Vector3D delta_r = r2 - r1; //расстояние между началом двух отрезков
+    Vector3D delta_r = r2 - r1; //the distance between the beginning of two segments
 
-    Vector3D cross1 = delta_r.cross_product(dir2); //векторные произведения 
+    Vector3D cross1 = delta_r.cross_product(dir2); //vector products
     Vector3D cross2 = dir1.cross_product(dir2);
 
     double cross2_length = cross2.length();
     double cross1_length = cross1.length();
 
-    //оба сектора - точки (нулевая длина)
+    //both sectors are points (zero length)
     if (both_sectors_are_points(segment)) 
     {
         return (r1.equals(r2) ? r1 : Vector3D(NAN, NAN, NAN));
     }
 
-    //только один сектор точка
+    //only one sector point
     if (dir1.is_zero())
     {
        double s = (r1 - r2).length() / dir2.length();
@@ -69,18 +68,19 @@ Vector3D Segment3D::Intersect(const Segment3D& segment) const
        return Vector3D(NAN, NAN, NAN);
     }
 
-    //прямые паралельны (и не совпадают), очевидно что пересечения не будет
+    //the lines are parallel (and do not coincide), obviously there will be no intersection
     if (are_parallel(segment) && !(are_on_the_same_line(segment)))
     {
         std::cout << "Sectors are parallel. No intersection" << std::endl;
         return Vector3D(NAN, NAN, NAN);
     }
-    //прямые двух отрезков совпадают
+    //the lines of the two segments coincide
     if (are_on_the_same_line(segment))
     {
-        //ищем коэфициент проекции одного отрезка на другой
-        //для отрезка (1) r2 + t_0*dir2 представляем векторами другого
-        // 0 <= t_0 <= 1 должно выполняться
+        //we are looking for the coefficient of projection of one segment onto another
+        //for segment (1) r2 + t_0*dir2, we represent the vectors of the other
+        // 0 <= t_0 <= 1 must be fulfilled
+
 
         double t_0 = (delta_r * dir1) / (dir1 * dir1);
         double t_1 = ((segment.get_end() - r1) * dir1) / (dir1 * dir1);
@@ -97,7 +97,7 @@ Vector3D Segment3D::Intersect(const Segment3D& segment) const
             return Vector3D(NAN, NAN, NAN);
         }
     }
-    //для уравнения ставим условие чтобы вектора были равны по длине и сонаправлены
+    //for the equation, we set the condition that the vectors are equal in length and aligned
     Vector3D cross = cross1.cross_product(cross2);
     double t_0 = cross1_length / cross2_length;
 
